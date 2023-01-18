@@ -1,73 +1,68 @@
 import { useState } from "react";
 import "./App.css";
+import Forms from "./components/Forms";
+import NoteList from "./components/NoteList";
 
 function App() {
-  const [noteTitle, setNoteTitle] = useState("");
   const [notes, setNotes] = useState([]);
   const [editable, setEditable] = useState(false);
   const [editableNotes, setEditableNotes] = useState(null);
+  const [noteTitle, setNoteTitle] = useState("");
 
-  const createHandler = (e) => {
-    e.preventDefault();
-    if (!noteTitle) {
-      alert("Please enter a title");
-    } else {
-      const newNote = {
-        id: Date.now() + "",
-        title: noteTitle,
-      };
-      setNotes([...notes, newNote]);
-      setNoteTitle("");
-    }
-  };
+  // const createHandler = (e) => {
+  //   e.preventDefault();
+  //   if (!noteTitle) {
+  //     alert("Please enter a title");
+  //   } else {
+  //     const newNote = {
+  //       id: Date.now() + "",
+  //       title: noteTitle,
+  //     };
+  //     setNotes([...notes, newNote]);
+  //     setNoteTitle("");
+  //   }
+  // };
 
-  const removeHandler = (id) => {
-    const newNoteArray = notes.filter((items) => items.id !== id);
-    setNotes(newNoteArray);
-  };
+  // const removeHandler = (id) => {
+  //   const newNoteArray = notes.filter((items) => items.id !== id);
+  //   setNotes(newNoteArray);
+  // };
 
-  const editHandler = (id) => {
-    setEditable(true);
-    const findNoteToEdit = notes.find((item) => item.id === id);
-    console.log(findNoteToEdit);
-    setEditableNotes(findNoteToEdit);
-    setNoteTitle(findNoteToEdit.title);
-  };
+  // const editHandler = (id) => {
+  //   setEditable(true);
+  //   const findNoteToEdit = notes.find((item) => item.id === id);
+  //   console.log(findNoteToEdit);
+  //   setEditableNotes(findNoteToEdit);
+  //   setNoteTitle(findNoteToEdit.title);
+  // };
 
-  const updateHandler = (e) => {
-    e.preventDefault();
-    const newNote = notes.map((item) => {
-      if (item.id === editableNotes.id) {
-        item.title = noteTitle;
-      }
-      return item;
-    });
+  // const updateHandler = (e) => {
+  //   e.preventDefault();
+  //   const newNote = notes.map((item) => {
+  //     if (item.id === editableNotes.id) {
+  //       item.title = noteTitle;
+  //     }
+  //     return item;
+  //   });
 
-    setNotes(newNote);
-    setEditable(false);
-    setEditableNotes(null);
-    setNoteTitle("");
-  };
+  //   setNotes(newNote);
+  //   setEditable(false);
+  //   setEditableNotes(null);
+  //   setNoteTitle("");
+  // };
   return (
     <div className="App">
-      <form onSubmit={editable ? updateHandler : createHandler}>
-        <input
-          value={noteTitle}
-          type="text"
-          onChange={(event) => {
-            setNoteTitle(event.target.value);
-          }}
-        />
-        <button
-          onClick={() => {
-            createHandler();
-          }}
-          type="submit"
-        >
-          {editable ? "Edit note title" : "Add note"}
-        </button>
-      </form>
-      <div className="Notes">
+      <Forms
+        setNoteTitle={setNoteTitle}
+        setNotes={setNotes}
+        setEditable={setEditable}
+        setEditableNotes={setEditableNotes}
+        noteTitle={noteTitle}
+        editable={editable}
+        editableNotes={editableNotes}
+        notes={notes}
+      />
+      {/* <div className="Notes">
         <ul className="NoteList">
           {notes?.map((item) => (
             <li key={item.key}>
@@ -89,7 +84,15 @@ function App() {
             </li>
           ))}
         </ul>
-      </div>
+      </div> */}
+      <NoteList
+        notes={notes}
+        setNotes={notes}
+        setEditable={setEditable}
+        setEditableNotes={setEditableNotes}
+        setNoteTitle={setNoteTitle}
+        editable={editable}
+      />
     </div>
   );
 }
