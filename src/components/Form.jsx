@@ -1,50 +1,39 @@
 import { useContext, React } from "react";
 import { StudentContext } from "../context/StudentProvider";
+// import { studentReducer } from "./../reducers/student";
 
-const Form = (props) => {
-  const stCtx = useContext(StudentContext);
+const Form = () => {
+  const { studentStates, dispatch } = useContext(StudentContext);
   const createHandler = (e) => {
     e.preventDefault();
-    if (!stCtx.studentName) {
+    if (!studentStates.studentName) {
       alert("Please enter a student name");
     } else {
-      const newStudent = {
-        id: Date.now() + "",
-        name: stCtx.studentName,
-        isPresent: undefined,
-      };
-      stCtx.setStudents([...stCtx.students, newStudent]);
-      stCtx.setStudentName("");
+      dispatch({ type: "add_student" });
     }
   };
   const upadteHandler = (e) => {
     e.preventDefault();
-    const editedStudent = stCtx.students.map((item) => {
-      if (item.id === stCtx.editableStudent.id) {
-        item.name = stCtx.studentName;
-      }
-      return item;
-    });
-    stCtx.setStudents(editedStudent);
-    stCtx.setStudentName("");
-    stCtx.setEditable(false);
-    stCtx.setEditableStudent(null);
+    dispatch({ type: "update_student" });
   };
   return (
-    <form onSubmit={stCtx.editable ? upadteHandler : createHandler}>
+    <form onSubmit={studentStates.editable ? upadteHandler : createHandler}>
       <input
         type="text"
-        value={stCtx.studentName}
+        value={studentStates.studentName}
         onChange={(event) => {
-          stCtx.setStudentName(event.target.value);
+          dispatch({
+            type: "change_student_name",
+            payload: event.target.value,
+          });
         }}
       />
       <button
         onClick={(e) => {
-          stCtx.editable ? upadteHandler(e) : createHandler(e);
+          studentStates.editable ? upadteHandler(e) : createHandler(e);
         }}
       >
-        {stCtx.editable ? "Update Student" : "Add student"}
+        {studentStates.editable ? "Update Student" : "Add student"}
       </button>
     </form>
   );
