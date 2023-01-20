@@ -2,9 +2,7 @@
 import "./App.css";
 import { useState } from "react";
 import Form from "./components/Form";
-import StudentList from "./components/StudentList";
-import PresentList from "./components/PresentList";
-import AbsentList from "./components/AbsentList";
+import StudentSection from "./components/StudentSection";
 
 const App = () => {
   const [studentName, setStudentName] = useState("");
@@ -24,17 +22,13 @@ const App = () => {
         editableStudent={editableStudent}
         students={students}
       />
-      <div className="student-section">
-        <StudentList
-          students={students}
-          setStudents={setStudents}
-          setEditable={setEditable}
-          setEditableStudent={setEditableStudent}
-          setStudentName={setStudentName}
-        />
-        <PresentList students={students} setStudents={setStudents} />
-        <AbsentList students={students} setStudents={setStudents} />
-      </div>
+      <StudentSection
+        students={students}
+        setStudents={setStudents}
+        setEditable={setEditable}
+        setEditableStudent={setEditableStudent}
+        setStudentName={setStudentName}
+      />
     </div>
   );
 };
