@@ -1,48 +1,50 @@
-import React from "react";
+import { useContext, React } from "react";
+import { StudentContext } from "../context/StudentProvider";
 
 const Form = (props) => {
+  const stCtx = useContext(StudentContext);
   const createHandler = (e) => {
     e.preventDefault();
-    if (!props.studentName) {
+    if (!stCtx.studentName) {
       alert("Please enter a student name");
     } else {
       const newStudent = {
         id: Date.now() + "",
-        name: props.studentName,
+        name: stCtx.studentName,
         isPresent: undefined,
       };
-      props.setStudents([...props.students, newStudent]);
-      props.setStudentName("");
+      stCtx.setStudents([...stCtx.students, newStudent]);
+      stCtx.setStudentName("");
     }
   };
   const upadteHandler = (e) => {
     e.preventDefault();
-    const editedStudent = props.students.map((item) => {
-      if (item.id === props.editableStudent.id) {
-        item.name = props.studentName;
+    const editedStudent = stCtx.students.map((item) => {
+      if (item.id === stCtx.editableStudent.id) {
+        item.name = stCtx.studentName;
       }
       return item;
     });
-    props.setStudents(editedStudent);
-    props.setStudentName("");
-    props.setEditable(false);
-    props.setEditableStudent(null);
+    stCtx.setStudents(editedStudent);
+    stCtx.setStudentName("");
+    stCtx.setEditable(false);
+    stCtx.setEditableStudent(null);
   };
   return (
-    <form onSubmit={props.editable ? upadteHandler : createHandler}>
+    <form onSubmit={stCtx.editable ? upadteHandler : createHandler}>
       <input
         type="text"
-        value={props.studentName}
+        value={stCtx.studentName}
         onChange={(event) => {
-          props.setStudentName(event.target.value);
+          stCtx.setStudentName(event.target.value);
         }}
       />
       <button
         onClick={(e) => {
-          props.editable ? upadteHandler(e) : createHandler(e);
+          stCtx.editable ? upadteHandler(e) : createHandler(e);
         }}
       >
-        {props.editable ? "Update Student" : "Add student"}
+        {stCtx.editable ? "Update Student" : "Add student"}
       </button>
     </form>
   );

@@ -1,23 +1,16 @@
-import React from "react";
+import { React, useContext } from "react";
+import { StudentContext } from "./../context/StudentProvider";
 
-const AbsentList = (props) => {
-  const accidentHandler = (id) => {
-    const newList = props.students.map((item) => {
-      if (item.id === id) {
-        item.isPresent = !item.isPresent;
-      }
-      return item;
-    });
-    props.setStudents(newList);
-  };
+const AbsentList = ({ accidentHandler }) => {
+  const { students } = useContext(StudentContext);
   return (
     <div className="list abesent-student-list">
       <h1>Absent students</h1>
       <ul>
-        {props.students
+        {students
           .filter((student) => student.isPresent === false)
           .map((item) => (
-            <li>
+            <li key={item.id}>
               <span>{item.name}</span>
               <button onClick={() => accidentHandler(item.id)}>
                 Accidentally added

@@ -1,13 +1,21 @@
-import React from "react";
+import { React, useContext } from "react";
+import { StudentContext } from "./../context/StudentProvider";
 
-const StudentList = (props) => {
+const StudentList = () => {
+  const {
+    students,
+    setStudents,
+    setEditable,
+    setEditableStudent,
+    setStudentName,
+  } = useContext(StudentContext);
   const removeHandler = (id) => {
-    const afterRemoved = props.students.filter((item) => item.id !== id);
+    const afterRemoved = students.filter((item) => item.id !== id);
 
-    props.setStudents(afterRemoved);
+    setStudents(afterRemoved);
   };
   const presentHandler = (id) => {
-    const newList = props.students.map((item) => {
+    const newList = students.map((item) => {
       if (item.id === id) {
         if (item.isPresent === undefined) {
           item.isPresent = true;
@@ -19,10 +27,10 @@ const StudentList = (props) => {
       }
       return item;
     });
-    props.setStudents(newList);
+    setStudents(newList);
   };
   const absentHandler = (id) => {
-    const newList = props.students.map((item) => {
+    const newList = students.map((item) => {
       if (item.id === id) {
         if (item.isPresent === undefined) {
           item.isPresent = false;
@@ -34,20 +42,20 @@ const StudentList = (props) => {
       }
       return item;
     });
-    props.setStudents(newList);
+    setStudents(newList);
   };
   const editHandler = (id) => {
-    props.setEditable(true);
-    const studentToEdit = props.students.find((item) => item.id === id);
-    props.setEditableStudent(studentToEdit);
-    props.setStudentName(studentToEdit.name);
+    setEditable(true);
+    const studentToEdit = students.find((item) => item.id === id);
+    setEditableStudent(studentToEdit);
+    setStudentName(studentToEdit.name);
   };
   return (
     <div className="list all-student-list">
       <h1>All students</h1>
       <ul>
-        {props.students.map((item) => (
-          <li>
+        {students.map((item) => (
+          <li key={item.id}>
             <span>{item.name}</span>
             <button onClick={() => removeHandler(item.id)}>Delete</button>
             <button onClick={() => editHandler(item.id)}>Edit</button>
