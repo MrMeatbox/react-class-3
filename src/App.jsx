@@ -2,6 +2,7 @@ import "./App.css";
 // import { useState, useReducer } from "react";
 import Form from "./components/Form";
 import StudentSection from "./components/StudentSection";
+import { Link } from "react-router-dom";
 
 // const reducer = (counterState, action) => {
 //   switch (action.type) {
@@ -31,6 +32,9 @@ const App = () => {
       <button onClick={() => dispatch({ type: "DECREASE_BY_ONE", payload: 5 })}>
         Press to decrease
       </button> */}
+      <Link to={"/home"}>To home page</Link>
+      <br />
+      <Link to={"/about"}>To about page</Link>
     </div>
   );
 };
