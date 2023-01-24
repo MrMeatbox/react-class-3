@@ -16,7 +16,7 @@ const BoardDetails = () => {
   const [listTitle, setListTitle] = useState("");
   const submitHandler = (e) => {
     e.preventDefault();
-    const id = Date.now() + "";
+    const id = Date.now();
     dispatchListAction({
       type: "CREATE_LIST",
       payload: { id: id, title: listTitle, boardId: boardId },

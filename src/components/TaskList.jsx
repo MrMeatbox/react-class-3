@@ -18,7 +18,7 @@ const TaskList = ({ taskList }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    const id = Date.now() + "";
+    const id = Date.now();
 
     dispatchTaskAction({
       type: "CREATE_TASK",
@@ -44,33 +44,38 @@ const TaskList = ({ taskList }) => {
     console.log(taskList.tasks);
   };
 
-  const removeListHandler = () => {
-    dispatchListAction({ type: "REMOVE_LIST", payload: taskList.id });
+  const removeListHandler = (e) => {
+    e.stopPropagation();
+    // dispatchListAction({ type: "REMOVE_LIST", payload: taskList.id });
     dispatchBoardAction({
       type: "REMOVE_LIST_ID_FROM_BOARD",
       payload: { id: taskTitle.boardId, listId: taskTitle.id },
     });
+    dispatchListAction({
+      type: "REMOVE_LIST",
+      payload: taskList.id,
+    });
+    console.log(allTasks);
   };
   return (
     <div className="list-container">
       <div className="list-title-container">
         <h5>{taskList.title}</h5>
         <img
+          onClick={removeListHandler}
           src={icons.crossIcon}
           alt=""
           className="add-item-icon"
-          onClick={removeListHandler}
         />
       </div>
       {taskList.tasks
         .map((item) => {
           return allTasks.find((i) => i.id === item);
         })
-        .map((task) => (
+        .map((task, index) => (
           <TaskCard task={task} key={task.id} />
-          // <p key={task.id}>{task.title}</p>
         ))}
-
+      {/* {console.log({ taskList })} */}
       {!editMode ? (
         <AddItem setEditMode={setEditMode} />
       ) : (

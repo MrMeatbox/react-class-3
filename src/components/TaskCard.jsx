@@ -22,7 +22,8 @@ const TaskCard = ({ task }) => {
     setEditMode(false);
   };
 
-  const removeHandler = () => {
+  const removeHandler = (e) => {
+    e.stopPropagation();
     dispatchTaskAction({ type: "REMOVE_TASK", payload: task.id });
     dispatchListAction({
       type: "REMOVE_TASK_ID_FROM_LIST",
@@ -32,8 +33,7 @@ const TaskCard = ({ task }) => {
       type: "REMOVE_TASK_ID_FROM_BOARD",
       payload: { id: task.boardId, taskId: task.id },
     });
-
-    // console.log("Board id: " + task.boardId);
+    console.log(task);
     // console.log("List id: " + task.listId);
     // console.log("Task id: " + task.id);
   };
@@ -43,9 +43,9 @@ const TaskCard = ({ task }) => {
         <div onClick={() => setEditMode(true)} className="task-card">
           <p>{task.title}</p>
           <img
-            alt=""
             onClick={removeHandler}
             src={icons.crossIcon}
+            alt=""
             className="add-item-icon"
           />
         </div>

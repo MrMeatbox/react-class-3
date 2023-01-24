@@ -40,11 +40,11 @@ export const listReduder = (lists, action) => {
     case "REMOVE_TASK_ID_FROM_LIST": {
       return lists.map((item) => {
         if (item.id === action.payload.id) {
-          item.tasks.filter((task) => task.id !== action.payload.taskId);
-          console.log("List id: " + action.payload.id);
-          console.log("Task id: " + action.payload.taskId);
+          item.tasks = item.tasks.filter(
+            (task) => task !== action.payload.taskId
+          );
         }
-        console.log("deleted");
+
         return item;
       });
     }

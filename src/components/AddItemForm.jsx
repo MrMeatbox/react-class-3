@@ -12,8 +12,9 @@ const AddItemForm = ({
     e.stopPropagation();
     if (!title) {
       alert("Insert a valid information");
+    } else {
+      submitHandler(e);
     }
-    submitHandler(e);
   };
   return (
     <div className="form-container">
