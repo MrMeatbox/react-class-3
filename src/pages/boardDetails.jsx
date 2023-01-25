@@ -6,6 +6,7 @@ import AddItem from "../components/AddItem";
 import AddItemForm from "../components/AddItemForm";
 import { BoardContext } from "./../contexts/board";
 import TaskList from "../components/TaskList";
+import { DragDropContext } from "react-beautiful-dnd";
 
 const BoardDetails = () => {
   const { boardId } = useParams();
@@ -16,7 +17,7 @@ const BoardDetails = () => {
   const [listTitle, setListTitle] = useState("");
   const submitHandler = (e) => {
     e.preventDefault();
-    const id = Date.now();
+    const id = Date.now() + "";
     dispatchListAction({
       type: "CREATE_LIST",
       payload: { id: id, title: listTitle, boardId: boardId },
@@ -29,27 +30,54 @@ const BoardDetails = () => {
     setListTitle("");
     // console.log(lists);
   };
-  return (
-    <div className="d-flex m-top-sm flex-direction-row">
-      <Link to="/">Back to Boards</Link>
-      {lists
-        .filter((item) => item.boardId === boardId)
-        .map((taskList) => (
-          <TaskList taskList={taskList} key={taskList.id} />
-        ))}
 
-      {!editMode ? (
-        <AddItem listAddItem={true} setEditMode={setEditMode} />
-      ) : (
-        <AddItemForm
-          setEditMode={setEditMode}
-          listForm={true}
-          submitHandler={submitHandler}
-          title={listTitle}
-          onChangeHandler={(e) => setListTitle(e.target.value)}
-        />
-      )}
-    </div>
+  const onDragHandler = (result) => {
+    const { source, destination, draggableId } = result;
+    if (!destination) {
+      return;
+    }
+    if (
+      source.droppableId === destination.draggableId &&
+      source.index === destination.index
+    ) {
+      return;
+    }
+    if (source.droppableId !== destination.droppableId) {
+      dispatchTaskAction({
+        type: "CHANGE_LIST_ID_OF_TASK",
+        payload: { id: draggableId, listId: destination.droppableId },
+      });
+    }
+    dispatchListAction({
+      type: "SORT_TASK_IDS_IN_A_LIST",
+      payload: { source, destination, draggableId },
+    });
+    console.log(result);
+  };
+
+  return (
+    <DragDropContext onDragEnd={onDragHandler}>
+      <div className="d-flex m-top-sm flex-direction-row">
+        <Link to="/">Back to Boards</Link>
+        {lists
+          .filter((item) => item.boardId === boardId)
+          .map((taskList, index) => (
+            <TaskList taskList={taskList} key={taskList.id} index={index} />
+          ))}
+
+        {!editMode ? (
+          <AddItem listAddItem={true} setEditMode={setEditMode} />
+        ) : (
+          <AddItemForm
+            setEditMode={setEditMode}
+            listForm={true}
+            submitHandler={submitHandler}
+            title={listTitle}
+            onChangeHandler={(e) => setListTitle(e.target.value)}
+          />
+        )}
+      </div>
+    </DragDropContext>
   );
 };
 

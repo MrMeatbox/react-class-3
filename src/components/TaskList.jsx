@@ -2,13 +2,14 @@ import { React, useContext, useState } from "react";
 import AddItem from "./AddItem";
 import AddItemForm from "./AddItemForm";
 import { icons } from "../assets";
+import { Droppable } from "react-beautiful-dnd";
 
 import { BoardContext } from "../contexts/board";
 import { ListContext } from "../contexts/list";
 import { TaskContext } from "../contexts/task";
 import TaskCard from "./TaskCard";
 
-const TaskList = ({ taskList }) => {
+const TaskList = ({ taskList, index }) => {
   const [taskTitle, setTaskTitle] = useState("");
   const [editMode, setEditMode] = useState(false);
 
@@ -18,7 +19,7 @@ const TaskList = ({ taskList }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    const id = Date.now();
+    const id = Date.now() + "";
 
     dispatchTaskAction({
       type: "CREATE_TASK",
@@ -58,36 +59,43 @@ const TaskList = ({ taskList }) => {
     console.log(allTasks);
   };
   return (
-    <div className="list-container">
-      <div className="list-title-container">
-        <h5>{taskList.title}</h5>
-        <img
-          onClick={removeListHandler}
-          src={icons.crossIcon}
-          alt=""
-          className="add-item-icon"
-        />
-      </div>
-      {taskList.tasks
-        .map((item) => {
-          return allTasks.find((i) => i.id === item);
-        })
-        .map((task, index) => (
-          <TaskCard task={task} key={task.id} />
-        ))}
-      {/* {console.log({ taskList })} */}
-      {!editMode ? (
-        <AddItem setEditMode={setEditMode} />
-      ) : (
-        <AddItemForm
-          title={taskTitle}
-          listForm={false}
-          setEditMode={setEditMode}
-          submitHandler={submitHandler}
-          onChangeHandler={(e) => setTaskTitle(e.target.value)}
-        />
+    <Droppable droppableId={taskList.id} index={index}>
+      {(provided) => (
+        <div ref={provided.innerRef} {...provided.droppableProps}>
+          <div className="list-container">
+            <div className="list-title-container">
+              <h5>{taskList.title}</h5>
+              <img
+                onClick={removeListHandler}
+                src={icons.crossIcon}
+                alt=""
+                className="add-item-icon"
+              />
+            </div>
+            {taskList.tasks
+              .map((item) => {
+                return allTasks.find((i) => i.id === item);
+              })
+              .map((task, index) => (
+                <TaskCard index={index} task={task} key={task.id} />
+              ))}
+            {/* {provided.placeholder} */}
+            {/* {console.log({ taskList })} */}
+            {!editMode ? (
+              <AddItem setEditMode={setEditMode} />
+            ) : (
+              <AddItemForm
+                title={taskTitle}
+                listForm={false}
+                setEditMode={setEditMode}
+                submitHandler={submitHandler}
+                onChangeHandler={(e) => setTaskTitle(e.target.value)}
+              />
+            )}
+          </div>
+        </div>
       )}
-    </div>
+    </Droppable>
   );
 };
 

@@ -5,8 +5,9 @@ import { BoardContext } from "../contexts/board";
 import { ListContext } from "../contexts/list";
 import { TaskContext } from "../contexts/task";
 import { icons } from "../assets";
+import { Draggable } from "react-beautiful-dnd";
 
-const TaskCard = ({ task }) => {
+const TaskCard = ({ task, index }) => {
   const [taskTitle, setTaskTitle] = useState(task.title);
   const [editMode, setEditMode] = useState(false);
   const { dispatchTaskAction } = useContext(TaskContext);
@@ -38,26 +39,34 @@ const TaskCard = ({ task }) => {
     // console.log("Task id: " + task.id);
   };
   return (
-    <div>
-      {!editMode ? (
-        <div onClick={() => setEditMode(true)} className="task-card">
-          <p>{task.title}</p>
-          <img
-            onClick={removeHandler}
-            src={icons.crossIcon}
-            alt=""
-            className="add-item-icon"
-          />
+    <Draggable draggableId={task.id} index={index}>
+      {(provided) => (
+        <div
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+        >
+          {!editMode ? (
+            <div onClick={() => setEditMode(true)} className="task-card">
+              <p>{task.title}</p>
+              <img
+                onClick={removeHandler}
+                src={icons.crossIcon}
+                alt=""
+                className="add-item-icon"
+              />
+            </div>
+          ) : (
+            <AddItemForm
+              title={taskTitle}
+              onChangeHandler={(e) => setTaskTitle(e.target.value)}
+              setEditMode={setEditMode}
+              submitHandler={submitHandler}
+            />
+          )}
         </div>
-      ) : (
-        <AddItemForm
-          title={taskTitle}
-          onChangeHandler={(e) => setTaskTitle(e.target.value)}
-          setEditMode={setEditMode}
-          submitHandler={submitHandler}
-        />
       )}
-    </div>
+    </Draggable>
   );
 };
 
