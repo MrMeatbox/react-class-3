@@ -8,10 +8,13 @@ import { BoardContext } from "../contexts/board";
 import { ListContext } from "../contexts/list";
 import { TaskContext } from "../contexts/task";
 import TaskCard from "./TaskCard";
+import DropDown from "./dropDown";
 
 const TaskList = ({ taskList, index }) => {
   const [taskTitle, setTaskTitle] = useState("");
   const [editMode, setEditMode] = useState(false);
+  const [dropDown, setDropDown] = useState(false);
+  const [showOption, setShowOption] = useState(false);
 
   const { boards, dispatchBoardAction } = useContext(BoardContext);
   const { lists, dispatchListAction } = useContext(ListContext);
@@ -58,6 +61,15 @@ const TaskList = ({ taskList, index }) => {
     });
     console.log(allTasks);
   };
+
+  const showDropDown = () => {
+    setDropDown(true);
+    setShowOption(false);
+  };
+  const hideDropDown = () => {
+    setDropDown(false);
+    setShowOption(false);
+  };
   return (
     <Droppable droppableId={taskList.id} index={index}>
       {(provided) => (
@@ -65,12 +77,37 @@ const TaskList = ({ taskList, index }) => {
           <div className="list-container">
             <div className="list-title-container">
               <h5>{taskList.title}</h5>
-              <img
-                onClick={removeListHandler}
-                src={icons.crossIcon}
+              {/* <img
+                onMouseEnter={showDropDown}
+                onMouseLeave={hideDropDown}
+                src={icons.threeBar}
                 alt=""
                 className="add-item-icon"
-              />
+              >
+                {dropDown ? <DropDown /> : null}
+              </img> */}
+              <div
+                // className="add-item-icon"
+                onMouseEnter={showDropDown}
+                // onMouseLeave={hideDropDown}
+              >
+                <img
+                  className="add-item-icon"
+                  alt=""
+                  src={icons.crossIcon}
+                  onClick={hideDropDown}
+                />
+                {showOption ? (
+                  <img className="add-item-icon" src={icons.threeBar} />
+                ) : null}
+                {dropDown ? (
+                  <DropDown
+                    list={true}
+                    boardId={taskList.boardId}
+                    listId={taskList.id}
+                  />
+                ) : null}
+              </div>
             </div>
             {taskList.tasks
               .map((item) => {

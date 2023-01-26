@@ -6,6 +6,7 @@ import { ListContext } from "../contexts/list";
 import { TaskContext } from "../contexts/task";
 import { icons } from "../assets";
 import { Draggable } from "react-beautiful-dnd";
+import DropDown from "./dropDown";
 
 const TaskCard = ({ task, index }) => {
   const [taskTitle, setTaskTitle] = useState(task.title);
@@ -13,6 +14,8 @@ const TaskCard = ({ task, index }) => {
   const { dispatchTaskAction } = useContext(TaskContext);
   const { dispatchListAction } = useContext(ListContext);
   const { dispatchBoardAction } = useContext(BoardContext);
+  const [dropDown, setDropDown] = useState(false);
+  const [showOption, setShowOption] = useState(false);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -21,6 +24,14 @@ const TaskCard = ({ task, index }) => {
       payload: { id: task.id, title: taskTitle },
     });
     setEditMode(false);
+  };
+  const showDropDown = () => {
+    setDropDown(true);
+    setShowOption(false);
+  };
+  const hideDropDown = (e) => {
+    e.stopPropagation();
+    setDropDown(false);
   };
 
   const removeHandler = (e) => {
@@ -47,14 +58,33 @@ const TaskCard = ({ task, index }) => {
           {...provided.dragHandleProps}
         >
           {!editMode ? (
-            <div onClick={() => setEditMode(true)} className="task-card">
+            <div className="task-card">
               <p>{task.title}</p>
-              <img
-                onClick={removeHandler}
-                src={icons.crossIcon}
-                alt=""
-                className="add-item-icon"
-              />
+              <div
+                // className="add-item-icon"
+                onMouseEnter={showDropDown}
+                // onMouseLeave={hideDropDown}
+              >
+                <img
+                  className="add-item-icon"
+                  alt=""
+                  src={icons.threeBar}
+                  onClick={hideDropDown}
+                />
+                {showOption ? (
+                  <img className="add-item-icon" src={icons.crossIcon} />
+                ) : null}
+                {dropDown ? (
+                  <DropDown
+                    list={false}
+                    boardId={task.boardId}
+                    listId={task.listId}
+                    taskId={task.id}
+                    setEditMode={setEditMode}
+                    taskTitle={taskTitle}
+                  />
+                ) : null}
+              </div>
             </div>
           ) : (
             <AddItemForm

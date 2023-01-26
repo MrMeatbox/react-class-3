@@ -24,10 +24,16 @@ const BoardItem = ({ board }) => {
       dispatchTaskAction({ type: "REMOVE_TASK", payload: item.id });
     });
   };
+  const info = () => {
+    const lst = 0;
+    boards.filter((item) => item.id === boards.id).map((i) => lst++);
+    return lst;
+  };
   return (
     <div className="board-box d-flex flex-direction-column">
       <div className="d-flex justify-content-between">
         <h5 className="title-gap">{board.title}</h5>
+
         <img
           className="add-item-icon"
           alt=""
@@ -35,6 +41,7 @@ const BoardItem = ({ board }) => {
           src={icons.crossIcon}
         />
       </div>
+      <p>There are {board.lists.length} list(s)</p>
     </div>
   );
 };
